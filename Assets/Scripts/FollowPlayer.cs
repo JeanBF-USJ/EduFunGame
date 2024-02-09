@@ -2,18 +2,16 @@ using UnityEngine;
 
 public class FollowPlayer : MonoBehaviour
 {
-
     public Transform player;
-
-    private Vector3 offset;
+    private Vector3 _offset;
 
     void Start()
     {
-        offset = transform.position - player.position;
+        _offset = transform.position - player.position;
     }
     
     void Update()
     {
-        transform.position = player.position + offset;
+        transform.position = player.position + _offset;
     }
 }

@@ -2,9 +2,8 @@ using UnityEngine;
 
 public class GroundSpawner : MonoBehaviour
 {
-
     public GameObject groundTile;
-    private Vector3 nextSpawnPoint;
+    private Vector3 _nextSpawnPoint;
     
     private void Start()
     {
@@ -16,8 +15,8 @@ public class GroundSpawner : MonoBehaviour
 
     public void SpawnTile()
     {
-        GameObject temp = Instantiate(groundTile, nextSpawnPoint, Quaternion.identity);
-        nextSpawnPoint = temp.transform.GetChild(1).transform.position;
+        GameObject temp = Instantiate(groundTile, _nextSpawnPoint, Quaternion.identity);
+        _nextSpawnPoint = temp.transform.GetChild(1).transform.position;
     }
 
 }
