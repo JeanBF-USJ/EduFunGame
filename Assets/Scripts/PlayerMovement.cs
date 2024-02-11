@@ -2,20 +2,43 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float speed = 5;
-    public Rigidbody rb;
-    private float _horizontalInput;
-    public float horizontalMultiplier = 2;
+    private float _currentCooldown = 0f; // COOLDOWN IS BUGGY
+    [SerializeField] private Rigidbody rb;
+    [SerializeField] private float speed = 5;
+    [SerializeField] private int currentLane = 1;
+    [SerializeField] public float laneDistance = 3f;
+    [SerializeField] private float laneChangeSpeed = 5f;
+    [SerializeField] private float laneChangeCooldown = 0.2f;
 
     private void FixedUpdate()
     {
         Vector3 forwardMove = transform.forward * (speed * Time.fixedDeltaTime);
-        Vector3 horizontalMove = transform.right * (_horizontalInput * speed * Time.fixedDeltaTime * horizontalMultiplier);
-        rb.MovePosition(rb.position + forwardMove + horizontalMove);
+        rb.MovePosition(rb.position + forwardMove);
+
+        float targetXPosition = Mathf.Clamp((currentLane - 1) * laneDistance, -laneDistance, laneDistance);
+        Vector3 newPosition = new Vector3(targetXPosition, rb.position.y, rb.position.z);
+        rb.MovePosition(Vector3.Lerp(rb.position, newPosition, laneChangeSpeed * Time.fixedDeltaTime));
     }
 
     private void Update()
     {
-        _horizontalInput = Input.GetAxis("Horizontal");
+        float horizontalInput = Input.GetAxis("Horizontal");
+        
+        // avoid spam + control swapping from one lane to another
+        if (_currentCooldown > 0)
+        {
+            _currentCooldown -= Time.deltaTime;
+            return;
+        }
+        
+        if (horizontalInput > 0 && currentLane < 2) currentLane++;
+        else if (horizontalInput < 0 && currentLane > 0) currentLane--;
+        StartCooldown();
     }
+
+    private void StartCooldown()
+    {
+        _currentCooldown = laneChangeCooldown;
+    }
+
 }

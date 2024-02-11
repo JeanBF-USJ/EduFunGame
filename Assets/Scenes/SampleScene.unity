@@ -201,9 +201,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86e480e3986be436992e9d7426ff37f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
   rb: {fileID: 257421361}
-  horizontalMultiplier: 1.5
+  speed: 5
+  currentLane: 1
+  laneDistance: 3
+  laneChangeSpeed: 5
+  laneChangeCooldown: 0.3
 --- !u!54 &257421361
 Rigidbody:
   m_ObjectHideFlags: 0

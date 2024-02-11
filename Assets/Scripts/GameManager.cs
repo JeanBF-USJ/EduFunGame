@@ -5,7 +5,7 @@ public class GameManager : MonoBehaviour
 {
     private int _score;
     private static GameManager _instance;
-    public TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI scoreText;
     private void Awake()
     {
         _instance = this;

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class FollowPlayer : MonoBehaviour
 {
-    public Transform player;
+    [SerializeField] private Transform player;
     private Vector3 _offset;
 
     void Start()

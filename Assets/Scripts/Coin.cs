@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
-    public float turnSpeed = 90f;
+    [SerializeField] private float turnSpeed = 90f;
     
     private void OnTriggerEnter(Collider other)
     {

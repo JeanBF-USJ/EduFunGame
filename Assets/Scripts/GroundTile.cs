@@ -3,11 +3,14 @@ using UnityEngine;
 public class GroundTile : MonoBehaviour
 {
     private GroundSpawner _groundSpawner;
-    public GameObject coinPrefab;
-    
+    private PlayerMovement _playerMovement;
+    [SerializeField] private GameObject coinPrefab;
+    [SerializeField] private int numberOfLanes = 3;
+
     void Start()
     {
         _groundSpawner = GameObject.FindObjectOfType<GroundSpawner>();
+        _playerMovement = GameObject.FindObjectOfType<PlayerMovement>();
         SpawnCoins();
     }
 
@@ -19,23 +22,31 @@ public class GroundTile : MonoBehaviour
 
     private void SpawnCoins()
     {
-        int coinsToSpawn = 5;
-        for (int i = 0; i < coinsToSpawn; i++)
+        int coinsToSpawn = 3;
+        int maxCoinsInOneLane = 3;
+
+        for (int i = 0; i < coinsToSpawn;)
         {
-            GameObject temp = Instantiate(coinPrefab, transform);
-            temp.transform.position = GetRandomPointInCollider(GetComponent<Collider>());
+            int lane = Random.Range(0, numberOfLanes);
+            int coinsInLane = Random.Range(1, maxCoinsInOneLane + 1);
+
+            float laneWidth = _playerMovement.laneDistance;
+            float xOffset = (lane - (numberOfLanes - 1) * 0.5f) * laneWidth;
+
+            float verticalSpacing = 5f;
+
+            for (int j = 0; j < coinsInLane; j++)
+            {
+                GameObject temp = Instantiate(coinPrefab, transform);
+                float yOffset = j * verticalSpacing;
+                temp.transform.position = new Vector3(
+                    Random.Range(transform.position.x - 0.5f, transform.position.x + 0.5f) + xOffset,
+                    1,
+                    Random.Range(transform.position.z - 0.5f, transform.position.z + 0.5f) + yOffset
+                );
+                i++;
+                if (i >= coinsToSpawn) break;
+            }
         }
-    }
-
-    private Vector3 GetRandomPointInCollider(Collider collider)
-    {
-        Vector3 point = new Vector3(
-            Random.Range(collider.bounds.min.x, collider.bounds.max.x),
-            Random.Range(collider.bounds.min.y, collider.bounds.max.y),
-            Random.Range(collider.bounds.min.z, collider.bounds.max.z)
-            );
-
-        point.y = 1;
-        return point;
     }
 }
