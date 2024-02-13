@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private int currentLane = 1;
     [SerializeField] public float laneDistance = 3f;
     [SerializeField] private float laneChangeSpeed = 5f;
-    [SerializeField] private float laneChangeCooldown = 0.2f;
+    [SerializeField] private float laneChangeCooldown = 0.05f;
 
     private void FixedUpdate()
     {
