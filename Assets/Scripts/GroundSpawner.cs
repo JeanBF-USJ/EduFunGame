@@ -1,3 +1,5 @@
+using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class GroundSpawner : MonoBehaviour
@@ -22,11 +24,25 @@ public class GroundSpawner : MonoBehaviour
         
         if (_tileCount > 0 && _tileCount % 10 == 0)
         {
-            temp.transform.GetChild(2).gameObject.SetActive(true);
-            temp.transform.GetChild(3).gameObject.SetActive(true);
-            temp.transform.GetChild(4).gameObject.SetActive(true);
+            Transform[] options = new Transform[] {
+                temp.transform.GetChild(2),
+                temp.transform.GetChild(3),
+                temp.transform.GetChild(4)
+            };
+            
+            System.Random random = new System.Random();
+            options = options.OrderBy(_ => random.Next()).ToArray();
+            
+            for (int i = 0; i < options.Length; i++)
+            {
+                options[i].gameObject.SetActive(true);
+                options[i].GetComponent<AnswerCollider>().SetCorrectAnswer(i == 0);
+                TextMeshPro textMeshProComponent = options[i].GetComponent<TextMeshPro>();
+                if (textMeshProComponent != null) {
+                    textMeshProComponent.text = i == 0 ? "correct" : "wrong";
+                }
+            }
         }
         
     }
-
 }

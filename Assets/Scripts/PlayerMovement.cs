@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private float _currentCooldown = 0f; // COOLDOWN IS BUGGY
+    private bool _dead;
+    private float _currentCooldown; // COOLDOWN IS BUGGY
     [SerializeField] private Rigidbody rb;
     [SerializeField] private float speed = 5;
     [SerializeField] private int currentLane = 1;
@@ -10,8 +11,16 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float laneChangeSpeed = 5f;
     [SerializeField] private float laneChangeCooldown = 0.05f;
 
+    public void Start()
+    {
+        _dead = false;
+        _currentCooldown = 0f;
+    }
+
     private void FixedUpdate()
     {
+        if (_dead) return;
+        
         Vector3 forwardMove = transform.forward * (speed * Time.fixedDeltaTime);
         rb.MovePosition(rb.position + forwardMove);
 
@@ -22,6 +31,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (_dead) return;
+        
         float horizontalInput = Input.GetAxis("Horizontal");
         
         // avoid spam + control swapping from one lane to another
@@ -39,6 +50,17 @@ public class PlayerMovement : MonoBehaviour
     private void StartCooldown()
     {
         _currentCooldown = laneChangeCooldown;
+    }
+
+    public void Die()
+    {
+        _dead = true;
+        Invoke(nameof(DisplayGameOverScreen), 2);
+    }
+
+    public void DisplayGameOverScreen()
+    {
+        Debug.Log("DEAD");
     }
 
 }
