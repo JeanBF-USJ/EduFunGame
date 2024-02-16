@@ -11,7 +11,7 @@ public class Coin : MonoBehaviour
             return;
         }
         
-        GameManager.GetInstance().IncrementScore();
+        FindObjectOfType<GameManager>().IncrementScore();
         Destroy(gameObject);
     }
     

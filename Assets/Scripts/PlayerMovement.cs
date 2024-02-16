@@ -60,7 +60,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void DisplayGameOverScreen()
     {
-        Debug.Log("DEAD");
+        FindObjectOfType<GameManager>().DisplayGameOverScreen();
     }
 
 }
