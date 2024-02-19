@@ -55,12 +55,6 @@ public class PlayerMovement : MonoBehaviour
     public void Die()
     {
         _dead = true;
-        Invoke(nameof(DisplayGameOverScreen), 2);
+        FindObjectOfType<GameManager>().GameOver();
     }
-
-    public void DisplayGameOverScreen()
-    {
-        FindObjectOfType<GameManager>().DisplayGameOverScreen();
-    }
-
 }
