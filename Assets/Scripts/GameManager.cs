@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
     {
         _animator.SetBool("isJogging",false);
         _animator.SetBool("isDead",true);
+        // !!! ADD API MANAGER IN START AND STARTCOROUTINE TO SAVEPROGRESS WITH CALLBACK METHOD !!!!
         Invoke(nameof(DisplayGameOverScreen), 2);
     }
 

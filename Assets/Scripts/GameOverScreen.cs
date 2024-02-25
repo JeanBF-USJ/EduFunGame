@@ -7,4 +7,9 @@ public class GameOverScreen : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    public void Leave()
+    {
+        SceneManager.LoadScene(1);
+    }
 }
