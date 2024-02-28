@@ -14,6 +14,7 @@ public class HubManager : MonoBehaviour
     [Header("PlayerInfo")]
     [SerializeField] private GameObject playerParent;
     [SerializeField] private TextMeshProUGUI coinsText;
+    
     private APIManager _apiManager;
     
     private void Start()
@@ -24,7 +25,7 @@ public class HubManager : MonoBehaviour
         if (string.IsNullOrEmpty(savedToken)) _apiManager.Logout();
         else
         {
-            string apiEndpoint = "/user/profile";
+            string apiEndpoint = "/userprofile/get";
             StartCoroutine(_apiManager.SendRequest(apiEndpoint, savedToken, null, HandleResponse));
         }
     }
