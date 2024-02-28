@@ -16,10 +16,12 @@ public class HubManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI coinsText;
     
     private APIManager _apiManager;
+    private LevelCalculator _levelCalculator;
     
     private void Start()
     {
         _apiManager = GetComponent<APIManager>();
+        _levelCalculator = GetComponent<LevelCalculator>();
         
         string savedToken = PlayerPrefs.GetString("token");
         if (string.IsNullOrEmpty(savedToken)) _apiManager.Logout();
@@ -49,8 +51,22 @@ public class HubManager : MonoBehaviour
                 Debug.Log("Accessory: " + accessory);
             }
 
-            coinsText.text = response.coins.ToString();
+            SetPlayerCoins(response.coins);
+            SetPlayerLevelProgressBarAndTextDetails(response.score);
         }
+    }
+
+    private void SetPlayerCoins(int coins)
+    {
+        coinsText.text = coins.ToString();
+    }
+
+    private void SetPlayerLevelProgressBarAndTextDetails(int score)
+    {
+        int scalingFactor = 100;
+        LevelInfo levelInfo = _levelCalculator.CalculateLevelAndProgress(score, scalingFactor);
+        
+        // SET UI BAR & TEXT
     }
 
     public void GoToLobby()
@@ -84,5 +100,6 @@ public class UserProfileResponse
     public string username;
     public string birthdate;
     public int coins;
+    public int score;
     public string[] accessories;
 }
