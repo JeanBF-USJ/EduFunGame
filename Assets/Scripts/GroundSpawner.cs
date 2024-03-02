@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -10,6 +11,24 @@ public class GroundSpawner : MonoBehaviour
     
     private void Start()
     {
+        StartCoroutine(WaitForQuestionsManager());
+    }
+
+    private IEnumerator WaitForQuestionsManager()
+    {
+        QuestionsManager questionsManager = null;
+        
+        while (questionsManager == null)
+        {
+            questionsManager = FindObjectOfType<QuestionsManager>();
+            yield return null;
+        }
+        
+        while (questionsManager.GetQuestions() == null)
+        {
+            yield return null;
+        }
+        
         for (int i = 0; i < 15; i++)
         {
             SpawnTile();
@@ -32,14 +51,15 @@ public class GroundSpawner : MonoBehaviour
             
             System.Random random = new System.Random();
             options = options.OrderBy(_ => random.Next()).ToArray();
-            
+
+            string[] answers = FindObjectOfType<QuestionsManager>().GetAnswers();
             for (int i = 0; i < options.Length; i++)
             {
                 options[i].gameObject.SetActive(true);
                 options[i].GetComponent<AnswerCollider>().SetCorrectAnswer(i == 0);
                 TextMeshPro textMeshProComponent = options[i].GetComponent<TextMeshPro>();
                 if (textMeshProComponent != null) {
-                    textMeshProComponent.text = i == 0 ? "correct" : "wrong";
+                    textMeshProComponent.text = answers[i];
                 }
             }
         }

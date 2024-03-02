@@ -50,7 +50,7 @@ public class AuthenticationManager : MonoBehaviour
     {
         string apiEndpoint = "/auth/login";
         string jsonStr = "{\"email\":\"" + loginEmailField.text + "\",\"password\":\"" + loginPasswordField.text + "\"}";
-        StartCoroutine(_apiManager.SendRequest(apiEndpoint, null, jsonStr, HandleResponse));
+        StartCoroutine(_apiManager.SendRequest(apiEndpoint, jsonStr, false, HandleResponse));
     }
 
     public void Register()
@@ -58,7 +58,7 @@ public class AuthenticationManager : MonoBehaviour
         string apiEndpoint = "/auth/register";
         string jsonStr = "{\"username\":\"" + registerUsernameField.text + "\",\"email\":\"" + registerEmailField.text
                          + "\",\"password\":\"" + registerPasswordField.text + "\",\"birthdate\":\"" + registerBirthdateField.text + "\"}";
-        StartCoroutine(_apiManager.SendRequest(apiEndpoint, null, jsonStr, HandleResponse));
+        StartCoroutine(_apiManager.SendRequest(apiEndpoint, jsonStr, false, HandleResponse));
     }
     
     private void HandleResponse(UnityWebRequest www)

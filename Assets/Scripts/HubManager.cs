@@ -6,30 +6,25 @@ using UnityEngine.SceneManagement;
 
 public class HubManager : MonoBehaviour
 {
-    [Header("Screens")]
-    [SerializeField] private GameObject lobbyScreen;
+    [Header("Screens")] [SerializeField] private GameObject lobbyScreen;
     [SerializeField] private GameObject lockerScreen;
     [SerializeField] private GameObject shopScreen;
-    
-    [Header("PlayerInfo")]
-    [SerializeField] private GameObject playerParent;
+
+    [Header("PlayerInfo")] [SerializeField]
+    private GameObject playerParent;
+
     [SerializeField] private TextMeshProUGUI coinsText;
-    
+
     private APIManager _apiManager;
     private LevelCalculator _levelCalculator;
-    
+
     private void Start()
     {
         _apiManager = GetComponent<APIManager>();
         _levelCalculator = GetComponent<LevelCalculator>();
-        
-        string savedToken = PlayerPrefs.GetString("token");
-        if (string.IsNullOrEmpty(savedToken)) _apiManager.Logout();
-        else
-        {
-            string apiEndpoint = "/userprofile/get";
-            StartCoroutine(_apiManager.SendRequest(apiEndpoint, savedToken, null, HandleResponse));
-        }
+
+        string apiEndpoint = "/userprofile/get";
+        StartCoroutine(_apiManager.SendRequest(apiEndpoint, null, true, HandleResponse));
     }
 
     public void StartGame()
@@ -65,7 +60,7 @@ public class HubManager : MonoBehaviour
     {
         int scalingFactor = 100;
         LevelInfo levelInfo = _levelCalculator.CalculateLevelAndProgress(score, scalingFactor);
-        
+
         // SET UI BAR & TEXT
     }
 

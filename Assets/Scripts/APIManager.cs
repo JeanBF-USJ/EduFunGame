@@ -10,12 +10,21 @@ public class APIManager : MonoBehaviour
 
     public delegate void ResponseCallback(UnityWebRequest response);
     
-    public IEnumerator SendRequest(string apiEndpoint, string token, string jsonStr, ResponseCallback callback)
+    public IEnumerator SendRequest(string apiEndpoint, string jsonStr, bool requiredToken, ResponseCallback callback)
     {
         using (UnityWebRequest www = UnityWebRequest.PostWwwForm(_baseUrl + apiEndpoint, "POST"))
         {
             www.SetRequestHeader("Content-Type", "application/json");
-            if (token != null) www.SetRequestHeader("Authorization", token);
+            if (requiredToken)
+            {
+                string savedToken = PlayerPrefs.GetString("token");
+                if (string.IsNullOrEmpty(savedToken))
+                {
+                    Logout();
+                    yield break;
+                }
+                else www.SetRequestHeader("Authorization", savedToken);
+            }
 
             if (jsonStr == null) jsonStr = "{}";
             byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonStr);

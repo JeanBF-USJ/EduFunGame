@@ -52,9 +52,9 @@ public class PlayerMovement : MonoBehaviour
         _currentCooldown = laneChangeCooldown;
     }
 
-    public void Die()
+    public void Die(bool won)
     {
         _dead = true;
-        FindObjectOfType<GameManager>().GameOver();
+        FindObjectOfType<GameManager>().GameOver(won);
     }
 }

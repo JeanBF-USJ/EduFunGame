@@ -11,7 +11,8 @@ public class GameManager : MonoBehaviour
     public RuntimeAnimatorController playerController;
     [SerializeField] private GameObject gameOverUI;
     [SerializeField] private TextMeshProUGUI coinsText;
-    
+
+    private bool _won;
     private int _coins;
     private Animator _animator;
     private APIManager _apiManager;
@@ -30,41 +31,48 @@ public class GameManager : MonoBehaviour
     public void IncrementCoins()
     {
         _coins++;
-        coinsText.text =  _coins.ToString();
+        coinsText.text = _coins.ToString();
     }
 
-    public void GameOver()
+    public void GameOver(bool won)
     {
-        _animator.SetBool("isJogging",false);
-        _animator.SetBool("isDead",true);
+        _won = won;
+        _animator.SetBool("isJogging", false);
+        _animator.SetBool("isDead", true);
         SaveProgress();
         Invoke(nameof(DisplayGameOverScreen), 2);
     }
 
     private void SaveProgress()
     {
-        string savedToken = PlayerPrefs.GetString("token");
-        if (string.IsNullOrEmpty(savedToken)) _apiManager.Logout();
-        else
-        {
-            string apiEndpoint = "/userprofile/update";
-            string gameID = "65df8a027bcad920cb100aac";
-            string jsonStr = "{\"game_id\":\"" + gameID + "\",\"coins\":\"" + _coins + "\",\"score\":\"" + GetScore() + "\"}";
-            StartCoroutine(_apiManager.SendRequest(apiEndpoint, savedToken, jsonStr, response => {}));
-        }
+        string apiEndpoint = "/userprofile/update";
+        string gameID = "65df8a027bcad920cb100aac";
+        string jsonStr = "{\"game_id\":\"" + gameID + "\",\"coins\":\"" + _coins + "\",\"score\":\"" + GetScore() +
+                         "\"}";
+        StartCoroutine(_apiManager.SendRequest(apiEndpoint, jsonStr, true, response => { }));
     }
 
     private void DisplayGameOverScreen()
     {
         int indexOfPlayerScoreTextInsideGameOverUIPanel = 0;
         int indexOfCoinsCollectedTextInsideGameOverUIPanel = 1;
-        
-        TextMeshProUGUI scoreTextOnGameOverUI = gameOverUI.transform.GetChild(indexOfPlayerScoreTextInsideGameOverUIPanel).GetComponent<TextMeshProUGUI>();
-        TextMeshProUGUI coinsTextOnGameOverUI = gameOverUI.transform.GetChild(indexOfCoinsCollectedTextInsideGameOverUIPanel).GetComponent<TextMeshProUGUI>();
-        
+        int indexOfGameOverDescriptionInsideGameOverUIPanel = 2;
+
+        TextMeshProUGUI scoreTextOnGameOverUI = gameOverUI.transform
+            .GetChild(indexOfPlayerScoreTextInsideGameOverUIPanel)
+            .GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI coinsTextOnGameOverUI = gameOverUI.transform
+            .GetChild(indexOfCoinsCollectedTextInsideGameOverUIPanel)
+            .GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI gameOverDescription = gameOverUI.transform
+            .GetChild(indexOfGameOverDescriptionInsideGameOverUIPanel)
+            .GetComponent<TextMeshProUGUI>();
+
         gameOverUI.SetActive(true);
+        
         scoreTextOnGameOverUI.text = "SCORE: " + GetScore();
         coinsTextOnGameOverUI.text = "Coins Collected: " + _coins;
+        gameOverDescription.text = _won ? "You completed the game!" : "You chose the wrong answer!";
     }
 
     private string GetScore()

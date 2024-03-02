@@ -25,10 +25,8 @@ public class AnswerCollider : MonoBehaviour
         {
             option.gameObject.SetActive(false);
         }
-        
-        if (!_correctAnswer)
-        {
-            other.GetComponent<PlayerMovement>().Die();
-        }
+
+        if (!_correctAnswer) other.GetComponent<PlayerMovement>().Die(false);
+        else FindObjectOfType<QuestionsManager>().NextQuestion();
     }
 }
