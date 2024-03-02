@@ -1,3 +1,4 @@
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -25,6 +26,8 @@ public class QuestionsManager : MonoBehaviour
         {
             Questions response = JsonUtility.FromJson<Questions>(www.downloadHandler.text);
             _questions = response.questions;
+            System.Random random = new System.Random();
+            _questions = _questions.OrderBy(_ => random.Next()).ToArray();
             NextQuestion();
         }
     }
