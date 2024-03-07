@@ -56,19 +56,12 @@ public class HubManager : MonoBehaviour
     {
         coinsText.text = coins.ToString();
     }
+        
 
     private void SetPlayerLevelProgressBarAndTextDetails(int score)
     {
         int scalingFactor = 100;
-        LevelInfo levelInfo = _levelManager.CalculateLevelAndProgress(score, scalingFactor);
-
-        Debug.Log(levelInfo.Level);
-        Debug.Log(levelInfo.ProgressWithinLevel);
-        Debug.Log(levelInfo.RemainingXpForNextLevel);
-        
-        RectTransform levelBar = lobbyScreen.transform.Find("LevelBar").gameObject.GetComponent<RectTransform>();
-        Debug.Log(levelBar.rect.width);
-        Debug.Log(levelBar.anchoredPosition.x);
+        _levelManager.SetPlayerLevel(score, scalingFactor);
     }
 
     public void GoToLobby()
