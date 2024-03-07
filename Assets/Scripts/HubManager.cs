@@ -14,14 +14,15 @@ public class HubManager : MonoBehaviour
     private GameObject playerParent;
 
     [SerializeField] private TextMeshProUGUI coinsText;
+    
 
     private APIManager _apiManager;
-    private LevelCalculator _levelCalculator;
+    private LevelManager _levelManager;
 
     private void Start()
     {
         _apiManager = GetComponent<APIManager>();
-        _levelCalculator = GetComponent<LevelCalculator>();
+        _levelManager = GetComponent<LevelManager>();
 
         string apiEndpoint = "/userprofile/get";
         StartCoroutine(_apiManager.SendRequest(apiEndpoint, null, true, HandleResponse));
@@ -59,9 +60,15 @@ public class HubManager : MonoBehaviour
     private void SetPlayerLevelProgressBarAndTextDetails(int score)
     {
         int scalingFactor = 100;
-        LevelInfo levelInfo = _levelCalculator.CalculateLevelAndProgress(score, scalingFactor);
+        LevelInfo levelInfo = _levelManager.CalculateLevelAndProgress(score, scalingFactor);
 
-        // SET UI BAR & TEXT
+        Debug.Log(levelInfo.Level);
+        Debug.Log(levelInfo.ProgressWithinLevel);
+        Debug.Log(levelInfo.RemainingXpForNextLevel);
+        
+        RectTransform levelBar = lobbyScreen.transform.Find("LevelBar").gameObject.GetComponent<RectTransform>();
+        Debug.Log(levelBar.rect.width);
+        Debug.Log(levelBar.anchoredPosition.x);
     }
 
     public void GoToLobby()

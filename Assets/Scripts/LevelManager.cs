@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class LevelCalculator : MonoBehaviour
+public class LevelManager : MonoBehaviour
 {
     public LevelInfo CalculateLevelAndProgress(float cumulativeXp, float scalingFactor)
     {
