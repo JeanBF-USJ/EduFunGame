@@ -1,21 +1,24 @@
 using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
 public class HubManager : MonoBehaviour
 {
-    [Header("Screens")] [SerializeField] private GameObject lobbyScreen;
+    [Header("Screens")]
+    [SerializeField] private GameObject lobbyScreen;
     [SerializeField] private GameObject lockerScreen;
     [SerializeField] private GameObject shopScreen;
 
-    [Header("PlayerInfo")] [SerializeField]
-    private GameObject playerParent;
-
+    [Header("PlayerInfo")]
+    [SerializeField] private GameObject playerParent;
+    [SerializeField] private RuntimeAnimatorController playerController;
     [SerializeField] private TextMeshProUGUI coinsText;
     
-
+    private GameObject _player;
+    private Animator _animator;
     private APIManager _apiManager;
     private LevelManager _levelManager;
 
@@ -47,6 +50,7 @@ public class HubManager : MonoBehaviour
                 Debug.Log("Accessory: " + accessory);
             }
 
+            SetPlayerCharacter();
             SetPlayerCoins(response.coins);
             SetPlayerLevelProgressBarAndTextDetails(response.score);
         }
@@ -56,7 +60,7 @@ public class HubManager : MonoBehaviour
     {
         coinsText.text = coins.ToString();
     }
-        
+
 
     private void SetPlayerLevelProgressBarAndTextDetails(int score)
     {
@@ -64,10 +68,28 @@ public class HubManager : MonoBehaviour
         _levelManager.SetPlayerLevel(score, scalingFactor);
     }
 
+    private void SetPlayerCharacter()
+    {
+        if (playerParent.transform.childCount > 0) {
+            Destroy(playerParent.transform.GetChild(0).gameObject);
+            _animator = null;
+            _player = null;
+        }
+        
+        string playerCharacter = PlayerPrefs.GetString("playerCharacter");
+        if (string.IsNullOrEmpty(playerCharacter)) playerCharacter = "Ninja";
+        
+        _player = Instantiate((UnityEngine.Object)Resources.Load(playerCharacter), Vector3.zero, Quaternion.identity, playerParent.transform) as GameObject;
+        _player.transform.localPosition = Vector3.zero;
+        _player.transform.localRotation = Quaternion.identity;
+        
+        _animator = _player.AddComponent<Animator>();
+        _animator.runtimeAnimatorController = playerController;
+        // _animator.SetBool("isJogging", true);
+    }
+
     public void GoToLobby()
     {
-        Debug.Log(lobbyScreen.activeInHierarchy);
-        Debug.Log(lobbyScreen.activeSelf);
         if (!lobbyScreen.activeInHierarchy) lobbyScreen.SetActive(true);
         if (lockerScreen.activeInHierarchy) lockerScreen.SetActive(false);
         if (shopScreen.activeInHierarchy) shopScreen.SetActive(false);
