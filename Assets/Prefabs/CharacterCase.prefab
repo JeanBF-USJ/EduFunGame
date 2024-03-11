@@ -161,6 +161,7 @@ GameObject:
   - component: {fileID: 1172338810944370331}
   - component: {fileID: 1304305033975177622}
   - component: {fileID: 9072443874767505647}
+  - component: {fileID: 2098056131809098970}
   m_Layer: 5
   m_Name: CharacterCase
   m_TagString: Untagged
@@ -242,6 +243,20 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
   m_EffectDistance: {x: -2, y: 2}
   m_UseGraphicAlpha: 1
+--- !u!114 &2098056131809098970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5852563907396068135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee88149b32c7346b0b0d65e3dd9282a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 6979955889180689166}
+  price: {fileID: 3099724877829572068}
 --- !u!1 &7133794883566062504
 GameObject:
   m_ObjectHideFlags: 0
@@ -341,7 +356,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0

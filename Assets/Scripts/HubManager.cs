@@ -90,6 +90,7 @@ public class HubManager : MonoBehaviour
 
     public void GoToLobby()
     {
+        playerParent.GetComponent<Animator>().SetBool("MoveLeft", false);
         if (!lobbyScreen.activeInHierarchy) lobbyScreen.SetActive(true);
         if (lockerScreen.activeInHierarchy) lockerScreen.SetActive(false);
         if (shopScreen.activeInHierarchy) shopScreen.SetActive(false);
@@ -97,6 +98,7 @@ public class HubManager : MonoBehaviour
 
     public void GoToLocker()
     {
+        playerParent.GetComponent<Animator>().SetBool("MoveLeft", false);
         if (!lockerScreen.activeInHierarchy) lockerScreen.SetActive(true);
         if (lobbyScreen.activeInHierarchy) lobbyScreen.SetActive(false);
         if (shopScreen.activeInHierarchy) shopScreen.SetActive(false);
@@ -104,6 +106,7 @@ public class HubManager : MonoBehaviour
 
     public void GoToShop()
     {
+        playerParent.GetComponent<Animator>().SetBool("MoveLeft", true);
         if (!shopScreen.activeInHierarchy) shopScreen.SetActive(true);
         if (lobbyScreen.activeInHierarchy) lobbyScreen.SetActive(false);
         if (lockerScreen.activeInHierarchy) lockerScreen.SetActive(false);
