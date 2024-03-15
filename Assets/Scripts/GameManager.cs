@@ -1,13 +1,9 @@
-using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Networking;
-using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject playerParent;
-    [SerializeField] private GameObject playerPrefab;
     public RuntimeAnimatorController playerController;
     [SerializeField] private GameObject gameOverUI;
     [SerializeField] private TextMeshProUGUI coinsText;
@@ -21,8 +17,12 @@ public class GameManager : MonoBehaviour
     {
         _apiManager = GetComponent<APIManager>();
         
+        string playerCharacter = PlayerPrefs.GetString("playerCharacter");
+        if (string.IsNullOrEmpty(playerCharacter)) playerCharacter = "Ninja";
+        
         Vector3 spawnPosition = new Vector3(0f, 1f, 0f);
-        GameObject player = Instantiate(playerPrefab, spawnPosition, Quaternion.identity, playerParent.transform);
+        GameObject player = Instantiate((UnityEngine.Object)Resources.Load("PlayerPrefabs/" + playerCharacter), spawnPosition, Quaternion.identity, playerParent.transform) as GameObject;
+        
         _animator = player.AddComponent<Animator>();
         _animator.runtimeAnimatorController = playerController;
         _animator.SetBool("isJogging", true);
