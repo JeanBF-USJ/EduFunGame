@@ -2,13 +2,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ShopItem : MonoBehaviour
+public class LockerItem : MonoBehaviour
 {
     public string id;
     public string itemName;
     public string description;
     public RawImage image;
-    public TextMeshProUGUI price;
     public Button button;
     
     void Start()
@@ -18,7 +17,8 @@ public class ShopItem : MonoBehaviour
 
     void OnClickButton()
     {
-        FindObjectOfType<HubManager>().SetPlayerCharacter(itemName);
-        FindObjectOfType<HubManager>().GetComponent<ShopManager>().SetPlayerInfo(itemName, description);
+        PlayerPrefs.SetString("playerCharacter", itemName);
+        FindObjectOfType<HubManager>().SetPlayerCharacter(null);
+        FindObjectOfType<HubManager>().GetComponent<LockerManager>().SetPlayerInfo(itemName, description);
     }
 }

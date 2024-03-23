@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 public class ShopManager : MonoBehaviour
 {
     [SerializeField] private Transform shopItemsContainer;
-    [SerializeField] private GameObject itemPrefab;
+    [SerializeField] private GameObject shopItemPrefab;
     [SerializeField] private TextMeshProUGUI itemName;
     [SerializeField] private TextMeshProUGUI itemDescription;
 
@@ -28,9 +28,10 @@ public class ShopManager : MonoBehaviour
             AccessoriesResponse response = JsonUtility.FromJson<AccessoriesResponse>(www.downloadHandler.text);
             foreach (Accessory accessory in response.accessories)
             {
-                GameObject newItem = Instantiate(itemPrefab, shopItemsContainer);
+                GameObject newItem = Instantiate(shopItemPrefab, shopItemsContainer);
                 ShopItem shopItem = newItem.GetComponent<ShopItem>();
-                shopItem.name = accessory.name;
+                shopItem.id = accessory._id;
+                shopItem.itemName = accessory.name;
                 shopItem.description = accessory.description;
                 shopItem.price.text = "" + accessory.price;
 
@@ -45,6 +46,12 @@ public class ShopManager : MonoBehaviour
         itemName.text = name;
         itemDescription.text = description;
     }
+    
+    public void ResetPlayerInfo()
+    {
+        itemName.text = "";
+        itemDescription.text = "";
+    }
 }
 
 [Serializable]
@@ -56,6 +63,7 @@ public class AccessoriesResponse
 [Serializable]
 public class Accessory
 {
+    public string _id;
     public string name;
     public string description;
     public int price;

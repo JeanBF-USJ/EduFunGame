@@ -19,12 +19,14 @@ public class HubManager : MonoBehaviour
     private GameObject _player;
     private Animator _animator;
     private APIManager _apiManager;
+    private LockerManager _lockerManager;
     private ShopManager _shopManager;
     private LevelManager _levelManager;
 
     private void Start()
     {
         _apiManager = GetComponent<APIManager>();
+        _lockerManager = GetComponent<LockerManager>();
         _shopManager = GetComponent<ShopManager>();
         _levelManager = GetComponent<LevelManager>();
 
@@ -42,18 +44,14 @@ public class HubManager : MonoBehaviour
         if (www.result == UnityWebRequest.Result.Success)
         {
             UserProfileResponse response = JsonUtility.FromJson<UserProfileResponse>(www.downloadHandler.text);
-            Debug.Log("Email: " + response.email);
-            Debug.Log("Username: " + response.username);
-            Debug.Log("Birthdate: " + response.birthdate);
-            Debug.Log("Coins: " + response.coins);
-            foreach (string accessory in response.accessories)
-            {
-                Debug.Log("Accessory: " + accessory);
-            }
-
-            SetPlayerCharacter();
+            // Debug.Log("Email: " + response.email);
+            // Debug.Log("Username: " + response.username);
+            // Debug.Log("Birthdate: " + response.birthdate);
+            
+            SetPlayerCharacter(null);
             SetPlayerCoins(response.coins);
             SetPlayerLevelProgressBarAndTextDetails(response.score);
+            _lockerManager.DisplayLockerItems(response.accessories);
         }
     }
 
@@ -69,7 +67,7 @@ public class HubManager : MonoBehaviour
         _levelManager.SetPlayerLevel(score, scalingFactor);
     }
 
-    public void SetPlayerCharacter()
+    public void SetPlayerCharacter(string playerCharacter)
     {
         if (playerParent.transform.childCount > 2) {
             Destroy(playerParent.transform.GetChild(2).gameObject);
@@ -77,7 +75,7 @@ public class HubManager : MonoBehaviour
             _player = null;
         }
         
-        string playerCharacter = PlayerPrefs.GetString("playerCharacter");
+        if (string.IsNullOrEmpty(playerCharacter)) playerCharacter = PlayerPrefs.GetString("playerCharacter");
         if (string.IsNullOrEmpty(playerCharacter)) playerCharacter = "Ninja";
         
         _player = Instantiate((UnityEngine.Object)Resources.Load("PlayerPrefabs/" + playerCharacter), Vector3.zero, Quaternion.identity, playerParent.transform) as GameObject;
@@ -89,13 +87,9 @@ public class HubManager : MonoBehaviour
         // _animator.SetBool("isJogging", true);
     }
 
-    public void SetPlayerInfo(string playerName, string playerDescription)
-    {
-        _shopManager.SetPlayerInfo(playerName, playerDescription);
-    }
-
     public void GoToLobby()
     {
+        SetPlayerCharacter(null);
         playerParent.GetComponent<Animator>().SetBool("MoveRight", false);
         if (!lobbyScreen.activeInHierarchy) lobbyScreen.SetActive(true);
         if (lockerScreen.activeInHierarchy) lockerScreen.SetActive(false);
@@ -104,6 +98,8 @@ public class HubManager : MonoBehaviour
 
     public void GoToLocker()
     {
+        SetPlayerCharacter(null);
+        _lockerManager.ResetPlayerInfo();
         playerParent.GetComponent<Animator>().SetBool("MoveRight", true);
         if (!lockerScreen.activeInHierarchy) lockerScreen.SetActive(true);
         if (lobbyScreen.activeInHierarchy) lobbyScreen.SetActive(false);
@@ -112,6 +108,7 @@ public class HubManager : MonoBehaviour
 
     public void GoToShop()
     {
+        _shopManager.ResetPlayerInfo();
         playerParent.GetComponent<Animator>().SetBool("MoveRight", true);
         if (!shopScreen.activeInHierarchy) shopScreen.SetActive(true);
         if (lobbyScreen.activeInHierarchy) lobbyScreen.SetActive(false);
@@ -127,5 +124,13 @@ public class UserProfileResponse
     public string birthdate;
     public int coins;
     public int score;
-    public string[] accessories;
+    public UserAccessory[] accessories;
+}
+
+[Serializable]
+public class UserAccessory
+{
+    public string _id;
+    public string name;
+    public string description;
 }
