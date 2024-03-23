@@ -18,7 +18,11 @@ public class ShopItem : MonoBehaviour
 
     void OnClickButton()
     {
-        FindObjectOfType<HubManager>().SetPlayerCharacter(itemName);
-        FindObjectOfType<HubManager>().GetComponent<ShopManager>().SetPlayerInfo(itemName, description);
+        HubManager hubManager = FindObjectOfType<HubManager>();
+        ShopManager shopManager = hubManager.GetComponent<ShopManager>();
+
+        hubManager.SetPlayerCharacter(itemName);
+        shopManager.SetPlayerInfo(this);
+        shopManager.EnableBuyButton(hubManager.GetPlayerCoins() > int.Parse(price.text));
     }
 }

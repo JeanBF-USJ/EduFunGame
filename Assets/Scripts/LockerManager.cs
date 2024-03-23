@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -11,8 +8,18 @@ public class LockerManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI itemName;
     [SerializeField] private TextMeshProUGUI itemDescription;
 
+    public void EmptyLockerItems()
+    {
+        foreach (Transform child in lockerItemsContainer.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
     public void DisplayLockerItems(UserAccessory[] userAccessories)
     {
+        EmptyLockerItems();
+        
         Texture2D texture;
         foreach (UserAccessory userAccessory in userAccessories)
         {

@@ -29,14 +29,20 @@ public class HubManager : MonoBehaviour
         _lockerManager = GetComponent<LockerManager>();
         _shopManager = GetComponent<ShopManager>();
         _levelManager = GetComponent<LevelManager>();
-
-        string apiEndpoint = "/userprofile/get";
-        StartCoroutine(_apiManager.SendRequest(apiEndpoint, null, true, HandleResponse));
+        
+        SetPlayerCharacter(null);
+        SetUserProfile();
     }
 
     public void StartGame()
     {
         SceneManager.LoadScene(2);
+    }
+
+    public void SetUserProfile()
+    {
+        string apiEndpoint = "/userprofile/get";
+        StartCoroutine(_apiManager.SendRequest(apiEndpoint, null, true, HandleResponse));
     }
 
     private void HandleResponse(UnityWebRequest www)
@@ -48,14 +54,18 @@ public class HubManager : MonoBehaviour
             // Debug.Log("Username: " + response.username);
             // Debug.Log("Birthdate: " + response.birthdate);
             
-            SetPlayerCharacter(null);
             SetPlayerCoins(response.coins);
             SetPlayerLevelProgressBarAndTextDetails(response.score);
             _lockerManager.DisplayLockerItems(response.accessories);
         }
     }
+    
+    public int GetPlayerCoins()
+    {
+        return int.Parse(coinsText.text);
+    }
 
-    private void SetPlayerCoins(int coins)
+    public void SetPlayerCoins(int coins)
     {
         coinsText.text = coins.ToString();
     }
