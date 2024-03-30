@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -22,6 +23,16 @@ public class HubManager : MonoBehaviour
     private LockerManager _lockerManager;
     private ShopManager _shopManager;
     private LevelManager _levelManager;
+    
+    private readonly Dictionary<string, float> _characterPositions = new Dictionary<string, float>()
+    {
+        {"Ninja", 0.0f},
+        {"Archer", 0.1f},
+        {"Eve", -0.15f},
+        {"Kachujin", 0.165f},
+        {"Vanguard", 0.12f},
+    };
+    
 
     private void Start()
     {
@@ -89,7 +100,7 @@ public class HubManager : MonoBehaviour
         if (string.IsNullOrEmpty(playerCharacter)) playerCharacter = "Ninja";
         
         _player = Instantiate((UnityEngine.Object)Resources.Load("PlayerPrefabs/" + playerCharacter), Vector3.zero, Quaternion.identity, playerParent.transform) as GameObject;
-        _player.transform.localPosition = Vector3.zero;
+        _player.transform.localPosition = new Vector3(0.0f, _characterPositions.ContainsKey(playerCharacter) ? _characterPositions[playerCharacter] : 0.0f, 0.0f);
         _player.transform.localRotation = Quaternion.identity;
         
         _animator = _player.AddComponent<Animator>();

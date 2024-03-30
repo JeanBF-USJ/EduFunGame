@@ -20,10 +20,10 @@ public class ShopManager : MonoBehaviour
         _apiManager = GetComponent<APIManager>();
 
         string apiEndpoint = "/accessories/get";
-        StartCoroutine(_apiManager.SendRequest(apiEndpoint, null, true, HandleAccessoriesResponse));
+        StartCoroutine(_apiManager.SendRequest(apiEndpoint, null, true, DisplayShopItems));
     }
 
-    private void HandleAccessoriesResponse(UnityWebRequest www)
+    private void DisplayShopItems(UnityWebRequest www)
     {
         if (www.result == UnityWebRequest.Result.Success)
         {
