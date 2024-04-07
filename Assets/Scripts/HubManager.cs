@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class HubManager : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class HubManager : MonoBehaviour
     [SerializeField] private GameObject playerParent;
     [SerializeField] private RuntimeAnimatorController playerController;
     [SerializeField] private TextMeshProUGUI coinsText;
+    [Header("")] [SerializeField] private RawImage selectedGameImage;
     
     private GameObject _player;
     private Animator _animator;
@@ -23,6 +25,11 @@ public class HubManager : MonoBehaviour
     private LockerManager _lockerManager;
     private ShopManager _shopManager;
     private LevelManager _levelManager;
+
+    private string _username;
+    private string _birthdate;
+
+    private string _selectedGame = "TriviaGame";
     
     private readonly Dictionary<string, float> _characterPositions = new Dictionary<string, float>()
     {
@@ -31,6 +38,11 @@ public class HubManager : MonoBehaviour
         {"Eve", -0.15f},
         {"Kachujin", 0.165f},
         {"Vanguard", 0.12f},
+    };
+    
+    private readonly Dictionary<string, int> _gameScenes = new Dictionary<string, int>()
+    {
+        {"TriviaGame", 2}
     };
     
 
@@ -45,9 +57,16 @@ public class HubManager : MonoBehaviour
         SetUserProfile();
     }
 
+    public void SelectGame(string gameName)
+    {
+        _selectedGame = gameName;
+        Texture2D texture = Resources.Load<Texture2D>("GameIcons/" + gameName);
+        selectedGameImage.texture = texture;
+    }
+
     public void StartGame()
     {
-        SceneManager.LoadScene(2);
+        if (_gameScenes.ContainsKey(_selectedGame)) SceneManager.LoadScene(_gameScenes[_selectedGame]);
     }
 
     public void SetUserProfile()
@@ -61,14 +80,19 @@ public class HubManager : MonoBehaviour
         if (www.result == UnityWebRequest.Result.Success)
         {
             UserProfileResponse response = JsonUtility.FromJson<UserProfileResponse>(www.downloadHandler.text);
-            // Debug.Log("Email: " + response.email);
-            // Debug.Log("Username: " + response.username);
-            // Debug.Log("Birthdate: " + response.birthdate);
+
+            _username = response.username;
+            _birthdate = response.birthdate;
             
             SetPlayerCoins(response.coins);
             SetPlayerLevelProgressBarAndTextDetails(response.score);
             _lockerManager.DisplayLockerItems(response.accessories);
         }
+    }
+    
+    public string GetBirthdate()
+    {
+        return _birthdate;
     }
     
     public int GetPlayerCoins()
