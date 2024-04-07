@@ -25,6 +25,7 @@ public class HubManager : MonoBehaviour
     private LockerManager _lockerManager;
     private ShopManager _shopManager;
     private LevelManager _levelManager;
+    private GameSelectionManager _gameSelectionManager;
 
     private string _username;
     private string _birthdate;
@@ -52,6 +53,7 @@ public class HubManager : MonoBehaviour
         _lockerManager = GetComponent<LockerManager>();
         _shopManager = GetComponent<ShopManager>();
         _levelManager = GetComponent<LevelManager>();
+        _gameSelectionManager = GetComponent<GameSelectionManager>();
         
         SetPlayerCharacter(null);
         SetUserProfile();
@@ -87,6 +89,7 @@ public class HubManager : MonoBehaviour
             SetPlayerCoins(response.coins);
             SetPlayerLevelProgressBarAndTextDetails(response.score);
             _lockerManager.DisplayLockerItems(response.accessories);
+            _gameSelectionManager.FillGameSelectionMenu();
         }
     }
     

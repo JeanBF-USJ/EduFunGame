@@ -20,18 +20,17 @@ public class GameSelectionManager : MonoBehaviour
     
     private readonly int MIN_AGE = 6;
     private readonly int MAX_AGE = 18;
-    
+
     private void Start()
     {
         _apiManager = GetComponent<APIManager>();
         _hubManager = GetComponent<HubManager>();
         _gameDescriptionManager = GetComponent<GameDescriptionManager>();
     }
-    
+
     public void OpenGameSelectionMenu()
     {
-        string apiEndpoint = "/games";
-        StartCoroutine(_apiManager.SendRequest(apiEndpoint, null, true, DisplayGameItems));
+        FillGameSelectionMenu();
         gameSelectionMenu.SetActive(true);
     }
     
@@ -39,6 +38,12 @@ public class GameSelectionManager : MonoBehaviour
     {
         gameSelectionMenu.SetActive(false);
         _gameDescriptionManager.CloseGameDescription();
+    }
+
+    public void FillGameSelectionMenu()
+    {
+        string apiEndpoint = "/games";
+        StartCoroutine(_apiManager.SendRequest(apiEndpoint, null, true, DisplayGameItems));
     }
     
     public void EmptyGameItems()

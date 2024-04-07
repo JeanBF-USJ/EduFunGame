@@ -46,8 +46,8 @@ public class GameManager : MonoBehaviour
     private void SaveProgress()
     {
         string apiEndpoint = "/userprofile/update";
-        string gameID = "65df8a027bcad920cb100aac";
-        string jsonStr = "{\"game_id\":\"" + gameID + "\",\"coins\":\"" + _coins + "\",\"score\":\"" + GetScore() +
+        string gameName = "TriviaGame";
+        string jsonStr = "{\"name\":\"" + gameName + "\",\"coins\":\"" + _coins + "\",\"score\":\"" + GetScore() +
                          "\"}";
         StartCoroutine(_apiManager.SendRequest(apiEndpoint, jsonStr, true, response => { }));
     }
