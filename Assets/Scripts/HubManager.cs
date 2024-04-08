@@ -17,7 +17,10 @@ public class HubManager : MonoBehaviour
     [SerializeField] private GameObject playerParent;
     [SerializeField] private RuntimeAnimatorController playerController;
     [SerializeField] private TextMeshProUGUI coinsText;
-    [Header("")] [SerializeField] private RawImage selectedGameImage;
+    
+    [Header("")]
+    [SerializeField] private Button playGameButton;
+    [SerializeField] private RawImage selectedGameImage;
     
     private GameObject _player;
     private Animator _animator;
@@ -64,6 +67,8 @@ public class HubManager : MonoBehaviour
         _selectedGame = gameName;
         Texture2D texture = Resources.Load<Texture2D>("GameIcons/" + gameName);
         selectedGameImage.texture = texture;
+
+        playGameButton.interactable = _gameScenes.ContainsKey(_selectedGame);
     }
 
     public void StartGame()

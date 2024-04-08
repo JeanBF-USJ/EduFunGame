@@ -18,6 +18,7 @@ public class GameDescriptionManager : MonoBehaviour
     [SerializeField] private GameObject reportScreen;
     [SerializeField] private TMP_InputField reportTitleField;
     [SerializeField] private TMP_InputField reportReasonField;
+    [SerializeField] private Button reportGameButton;
     
     [Header("")]
     [SerializeField] private GameObject gameDescriptionScreen;
@@ -31,6 +32,10 @@ public class GameDescriptionManager : MonoBehaviour
         _apiManager = GetComponent<APIManager>();
         _hubManager = GetComponent<HubManager>();
         _gameSelectionManager = GetComponent<GameSelectionManager>();
+        
+        reportGameButton.interactable = false;
+        reportTitleField.onValueChanged.AddListener(OnChangeReportFields);
+        reportReasonField.onValueChanged.AddListener(OnChangeReportFields);
     }
 
     public void OpenGameDescription(GameItem gameItem)
@@ -96,6 +101,12 @@ public class GameDescriptionManager : MonoBehaviour
         reportScreen.gameObject.SetActive(false);
     }
 
+    public void OnChangeReportFields(string newValue)
+    {
+        if ((reportTitleField.text == "" || reportReasonField.text == "") && reportGameButton.interactable) reportGameButton.interactable = false;
+        else if (reportTitleField.text != "" && reportReasonField.text != "" && !reportGameButton.interactable) reportGameButton.interactable = true;
+    }
+
     public void SubmitReportGame()
     {
         string apiEndpoint = "/report";
@@ -105,6 +116,7 @@ public class GameDescriptionManager : MonoBehaviour
         
         reportTitleField.text = "";
         reportReasonField.text = "";
+        reportGameButton.interactable = false;
     }
     
     private void ReportResponse(UnityWebRequest www)
