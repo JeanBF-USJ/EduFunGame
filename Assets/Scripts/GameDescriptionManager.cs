@@ -13,16 +13,24 @@ public class GameDescriptionManager : MonoBehaviour
     [SerializeField] private RawImage gameImage;
     [SerializeField] private GameObject favorite;
 
-    [Header("ReportInfo")] [SerializeField]
-    private GameObject thankYourForYourReport;
+    [Header("ReportInfo")]
+    [SerializeField] private GameObject thankYourForYourReport;
     [SerializeField] private GameObject reportScreen;
     [SerializeField] private TMP_InputField reportTitleField;
     [SerializeField] private TMP_InputField reportReasonField;
     [SerializeField] private Button reportGameButton;
+
+    [Header("RateGame")]
+    [SerializeField] private RawImage[] stars;
+    [SerializeField] private Texture2D emptyStar;
+    [SerializeField] private Texture2D filledStar;
+    [SerializeField] private GameObject rateScreen;
+    [SerializeField] private Button rateGameButton;
     
     [Header("")]
     [SerializeField] private GameObject gameDescriptionScreen;
 
+    private int _selectedStar;
     private APIManager _apiManager;
     private HubManager _hubManager;
     private GameSelectionManager _gameSelectionManager;
@@ -32,8 +40,10 @@ public class GameDescriptionManager : MonoBehaviour
         _apiManager = GetComponent<APIManager>();
         _hubManager = GetComponent<HubManager>();
         _gameSelectionManager = GetComponent<GameSelectionManager>();
-        
+
+        rateGameButton.interactable = false;
         reportGameButton.interactable = false;
+        
         reportTitleField.onValueChanged.AddListener(OnChangeReportFields);
         reportReasonField.onValueChanged.AddListener(OnChangeReportFields);
     }
@@ -55,7 +65,8 @@ public class GameDescriptionManager : MonoBehaviour
     public void CloseGameDescription()
     {
         gameDescriptionScreen.gameObject.SetActive(false);
-        reportScreen.gameObject.SetActive(false);
+        CloseReportGame();
+        CloseRateScreen();
         CloseThankYouForYourReport();
     }
 
@@ -136,6 +147,32 @@ public class GameDescriptionManager : MonoBehaviour
     public void CloseThankYouForYourReport()
     {
         thankYourForYourReport.gameObject.SetActive(false);
+    }
+
+    public void OnStarClick(int starNumber)
+    {
+        _selectedStar = starNumber;
+        for (int i = 0; i < stars.Length; i++)
+        {
+            stars[i].texture = i <= starNumber ? filledStar : emptyStar;
+        }
+        
+        if (!rateGameButton.interactable) rateGameButton.interactable = true;
+    }
+
+    public void OpenRateScreen()
+    {
+        rateScreen.gameObject.SetActive(true);
+    }
+    
+    public void CloseRateScreen()
+    {
+        rateScreen.gameObject.SetActive(false);
+        rateGameButton.interactable = false;
+        for (int i = 0; i < stars.Length; i++)
+        {
+            stars[i].texture = emptyStar;
+        }
     }
 
     public void RateGame()
