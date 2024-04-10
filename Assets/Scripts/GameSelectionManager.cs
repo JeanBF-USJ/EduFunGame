@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -8,9 +6,14 @@ public class GameSelectionManager : MonoBehaviour
 {
     [SerializeField] private GameObject gameItemPrefab;
     
-    [SerializeField] private Transform forYourAgeContainer;
     [SerializeField] private Transform allGamesContainer;
+    [SerializeField] private GameObject noGamesFoundInAllGames;
+    
+    [SerializeField] private Transform forYourAgeContainer;
+    [SerializeField] private GameObject noGamesFoundInForYourAgeGames;
+    
     [SerializeField] private Transform favoriteGamesContainer;
+    [SerializeField] private GameObject noGamesFoundInFavoriteGames;
     
     [SerializeField] private GameObject gameSelectionMenu;
 
@@ -57,6 +60,10 @@ public class GameSelectionManager : MonoBehaviour
     {
         if (www.result == UnityWebRequest.Result.Success)
         {
+            int allGamesCount = 0;
+            int forYourAgeGamesCount = 0;
+            int favoriteGamesCount = 0;
+            
             int age = CalculateAge();
             EmptyGameItems();
             
@@ -65,11 +72,15 @@ public class GameSelectionManager : MonoBehaviour
             GameObject newItem;
             foreach (Game game in response.games)
             {
+                if (!game.enabled) continue;
+
+                allGamesCount++;
                 newItem = Instantiate(gameItemPrefab, allGamesContainer);
                 FillItemDetails(newItem, game);
                 
                 if (game.favorite)
                 {
+                    favoriteGamesCount++;
                     newItem = Instantiate(gameItemPrefab, favoriteGamesContainer);
                     FillItemDetails(newItem, game);
                 }
@@ -77,10 +88,20 @@ public class GameSelectionManager : MonoBehaviour
                 if ((age > MAX_AGE && game.max_age == MAX_AGE) || (age < MIN_AGE && game.min_age == MIN_AGE) ||
                     (age >= game.min_age && age <= game.max_age))
                 {
+                    forYourAgeGamesCount++;
                     newItem = Instantiate(gameItemPrefab, forYourAgeContainer);
                     FillItemDetails(newItem, game);
                 }
             }
+            
+            if (allGamesCount == 0 && !noGamesFoundInAllGames.activeSelf) noGamesFoundInAllGames.SetActive(true);
+            else if (allGamesCount > 0 && noGamesFoundInAllGames.activeSelf) noGamesFoundInAllGames.SetActive(false);
+            
+            if (forYourAgeGamesCount == 0 && !noGamesFoundInForYourAgeGames.activeSelf) noGamesFoundInForYourAgeGames.SetActive(true);
+            else if (forYourAgeGamesCount > 0 && noGamesFoundInForYourAgeGames.activeSelf) noGamesFoundInForYourAgeGames.SetActive(false);
+            
+            if (favoriteGamesCount == 0 && !noGamesFoundInFavoriteGames.activeSelf) noGamesFoundInFavoriteGames.SetActive(true);
+            else if (favoriteGamesCount > 0 && noGamesFoundInFavoriteGames.activeSelf) noGamesFoundInFavoriteGames.SetActive(false);
         }
     }
 
@@ -126,4 +147,5 @@ public class Game
     public int min_age;
     public int max_age;
     public bool favorite;
+    public bool enabled;
 }

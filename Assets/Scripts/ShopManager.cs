@@ -37,6 +37,7 @@ public class ShopManager : MonoBehaviour
                 shopItem.itemName = accessory.name;
                 shopItem.description = accessory.description;
                 shopItem.price.text = "" + accessory.price;
+                if (accessory.owned) shopItem.owned.SetActive(true);
 
                 texture = Resources.Load<Texture2D>("PlayerIcons/" + accessory.name);
                 shopItem.image.texture = texture;
@@ -64,6 +65,11 @@ public class ShopManager : MonoBehaviour
         if (!buyButton.gameObject.activeSelf) buyButton.gameObject.SetActive(true);
     }
 
+    public void HideBuyButton()
+    {
+        if (buyButton.gameObject.activeSelf) buyButton.gameObject.SetActive(false);
+    }
+
     public void BuyItem()
     {
         string apiEndpoint = "/accessories/buy";
@@ -76,7 +82,8 @@ public class ShopManager : MonoBehaviour
         if (www.result == UnityWebRequest.Result.Success)
         {
             FindObjectOfType<HubManager>().SetUserProfile();
-            // mark item as owned
+            _previewedShopItem.owned.SetActive(true);
+            HideBuyButton();
         }
     }
 }
@@ -94,4 +101,5 @@ public class Accessory
     public string name;
     public string description;
     public int price;
+    public bool owned;
 }

@@ -9,6 +9,7 @@ public class ShopItem : MonoBehaviour
     public string description;
     public RawImage image;
     public TextMeshProUGUI price;
+    public GameObject owned;
     public Button button;
     
     void Start()
@@ -23,6 +24,8 @@ public class ShopItem : MonoBehaviour
 
         hubManager.SetPlayerCharacter(itemName);
         shopManager.SetPlayerInfo(this);
-        shopManager.EnableBuyButton(hubManager.GetPlayerCoins() > int.Parse(price.text));
+        
+        if (owned.activeSelf) shopManager.HideBuyButton();
+        else shopManager.EnableBuyButton(hubManager.GetPlayerCoins() > int.Parse(price.text));
     }
 }

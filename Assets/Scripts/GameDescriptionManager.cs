@@ -12,9 +12,8 @@ public class GameDescriptionManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI gameCategoryAge;
     [SerializeField] private RawImage gameImage;
     [SerializeField] private GameObject favorite;
-
+    
     [Header("ReportInfo")]
-    [SerializeField] private GameObject thankYourForYourReport;
     [SerializeField] private GameObject reportScreen;
     [SerializeField] private TMP_InputField reportTitleField;
     [SerializeField] private TMP_InputField reportReasonField;
@@ -28,6 +27,7 @@ public class GameDescriptionManager : MonoBehaviour
     [SerializeField] private Button rateGameButton;
     
     [Header("")]
+    [SerializeField] private GameObject thankYou;
     [SerializeField] private GameObject gameDescriptionScreen;
 
     private int _selectedStar;
@@ -67,7 +67,7 @@ public class GameDescriptionManager : MonoBehaviour
         gameDescriptionScreen.gameObject.SetActive(false);
         CloseReportGame();
         CloseRateScreen();
-        CloseThankYouForYourReport();
+        CloseThankYou();
     }
 
     public void SelectGame()
@@ -132,30 +132,26 @@ public class GameDescriptionManager : MonoBehaviour
     
     private void ReportResponse(UnityWebRequest www)
     {
-        if (www.result == UnityWebRequest.Result.Success)
-        {
-            OpenThankYouForYourReport();
-        }
+        if (www.result == UnityWebRequest.Result.Success) OpenThankYou();
         CloseReportGame();
     }
     
-    private void OpenThankYouForYourReport()
+    private void OpenThankYou()
     {
-        thankYourForYourReport.gameObject.SetActive(true);
+        thankYou.gameObject.SetActive(true);
     }
 
-    public void CloseThankYouForYourReport()
+    public void CloseThankYou()
     {
-        thankYourForYourReport.gameObject.SetActive(false);
+        thankYou.gameObject.SetActive(false);
     }
 
     public void OnStarClick(int starNumber)
     {
+        if (_selectedStar == starNumber) return;
+        
         _selectedStar = starNumber;
-        for (int i = 0; i < stars.Length; i++)
-        {
-            stars[i].texture = i <= starNumber ? filledStar : emptyStar;
-        }
+        for (int i = 0; i < stars.Length; i++) stars[i].texture = i < starNumber ? filledStar : emptyStar;
         
         if (!rateGameButton.interactable) rateGameButton.interactable = true;
     }
@@ -169,15 +165,20 @@ public class GameDescriptionManager : MonoBehaviour
     {
         rateScreen.gameObject.SetActive(false);
         rateGameButton.interactable = false;
-        for (int i = 0; i < stars.Length; i++)
-        {
-            stars[i].texture = emptyStar;
-        }
+        for (int i = 0; i < stars.Length; i++) stars[i].texture = emptyStar;
     }
 
     public void RateGame()
     {
-        
+        string apiEndpoint = "/games/rate";
+        string jsonStr = "{\"gameName\":\"" + gameName.text + "\",\"stars\":\"" + _selectedStar + "\"}";
+        StartCoroutine(_apiManager.SendRequest(apiEndpoint, jsonStr, true, RateResponse));
+    }
+
+    private void RateResponse(UnityWebRequest www)
+    {
+        if (www.result == UnityWebRequest.Result.Success) OpenThankYou();
+        CloseRateScreen();
     }
 
     public void ViewLeaderboard()

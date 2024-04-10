@@ -16,6 +16,7 @@ public class HubManager : MonoBehaviour
     [Header("PlayerInfo")]
     [SerializeField] private GameObject playerParent;
     [SerializeField] private RuntimeAnimatorController playerController;
+    [SerializeField] private TextMeshProUGUI username;
     [SerializeField] private TextMeshProUGUI coinsText;
     
     [Header("")]
@@ -29,8 +30,7 @@ public class HubManager : MonoBehaviour
     private ShopManager _shopManager;
     private LevelManager _levelManager;
     private GameSelectionManager _gameSelectionManager;
-
-    private string _username;
+    
     private string _birthdate;
 
     private string _selectedGame = "TriviaGame";
@@ -88,7 +88,7 @@ public class HubManager : MonoBehaviour
         {
             UserProfileResponse response = JsonUtility.FromJson<UserProfileResponse>(www.downloadHandler.text);
 
-            _username = response.username;
+            username.text = response.username;
             _birthdate = response.birthdate;
             
             SetPlayerCoins(response.coins);
