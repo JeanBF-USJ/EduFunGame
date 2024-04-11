@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -25,6 +26,11 @@ public class GameDescriptionManager : MonoBehaviour
     [SerializeField] private Texture2D filledStar;
     [SerializeField] private GameObject rateScreen;
     [SerializeField] private Button rateGameButton;
+    
+    [Header("Leaderboard")]
+    [SerializeField] private GameObject leaderboardItemPrefab;
+    [SerializeField] private Transform gameLeaderboardContainer;
+    [SerializeField] private GameObject gameLeaderboardScreen;
     
     [Header("")]
     [SerializeField] private GameObject thankYou;
@@ -67,6 +73,7 @@ public class GameDescriptionManager : MonoBehaviour
         gameDescriptionScreen.gameObject.SetActive(false);
         CloseReportGame();
         CloseRateScreen();
+        CloseGameLeaderboard();
         CloseThankYou();
     }
 
@@ -183,6 +190,66 @@ public class GameDescriptionManager : MonoBehaviour
 
     public void ViewLeaderboard()
     {
-        
+        gameLeaderboardScreen.SetActive(true);
+        FillLeaderboard(gameName.text);
     }
+
+    public void FillLeaderboard(string gameName)
+    {
+        string apiEndpoint = "/games/leaderboard";
+        string jsonStr = "{\"gameName\":\"" + gameName + "\"}";
+        StartCoroutine(_apiManager.SendRequest(apiEndpoint, jsonStr, true, LeaderboardResponse));
+    }
+    
+    public void EmptyLeaderboardItems()
+    {
+        int i = 0;
+        foreach (Transform child in gameLeaderboardContainer.transform)
+        {
+            if (i++ == 0) continue;
+            Destroy(child.gameObject);
+        }
+    }
+    
+    private void LeaderboardResponse(UnityWebRequest www)
+    {
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            EmptyLeaderboardItems();
+            
+            LeaderboardResponse response = JsonUtility.FromJson<LeaderboardResponse>(www.downloadHandler.text);
+            for (int i = 0; i < response.leaderboard.Length; i++)
+            {
+                LeaderBoardRow leaderBoardRow = response.leaderboard[i];
+                
+                GameObject newItem = Instantiate(leaderboardItemPrefab, gameLeaderboardContainer);
+                LeaderBoardItem leaderBoardItem = newItem.GetComponent<LeaderBoardItem>();
+                
+                leaderBoardItem.ranking.text = (leaderBoardRow.ranking == 0 ? i+1 : leaderBoardRow.ranking).ToString();
+                leaderBoardItem.username.text = leaderBoardRow.username;
+                leaderBoardItem.score.text = leaderBoardRow.highest_score.ToString();
+                leaderBoardItem.SetCurrentUser(leaderBoardRow.user_id == _hubManager.GetID());
+            }
+        }
+    }
+
+    public void CloseGameLeaderboard()
+    {
+        gameLeaderboardScreen.SetActive(false);
+    }
+}
+
+[Serializable]
+public class LeaderboardResponse
+{
+    public LeaderBoardRow[] leaderboard;
+}
+
+[Serializable]
+public class LeaderBoardRow
+{
+    public string user_id;
+    public string username;
+    public int highest_score;
+    public int ranking;
 }

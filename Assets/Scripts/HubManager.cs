@@ -30,7 +30,9 @@ public class HubManager : MonoBehaviour
     private ShopManager _shopManager;
     private LevelManager _levelManager;
     private GameSelectionManager _gameSelectionManager;
+    private GameDescriptionManager _gameDescriptionManager;
     
+    private string _id;
     private string _birthdate;
 
     private string _selectedGame = "TriviaGame";
@@ -57,6 +59,7 @@ public class HubManager : MonoBehaviour
         _shopManager = GetComponent<ShopManager>();
         _levelManager = GetComponent<LevelManager>();
         _gameSelectionManager = GetComponent<GameSelectionManager>();
+        _gameDescriptionManager = GetComponent<GameDescriptionManager>();
         
         SetPlayerCharacter(null);
         SetUserProfile();
@@ -88,14 +91,21 @@ public class HubManager : MonoBehaviour
         {
             UserProfileResponse response = JsonUtility.FromJson<UserProfileResponse>(www.downloadHandler.text);
 
-            username.text = response.username;
+            _id = response._id;
             _birthdate = response.birthdate;
+            username.text = response.username;
             
             SetPlayerCoins(response.coins);
             SetPlayerLevelProgressBarAndTextDetails(response.score);
             _lockerManager.DisplayLockerItems(response.accessories);
             _gameSelectionManager.FillGameSelectionMenu();
+            _gameDescriptionManager.FillLeaderboard("TriviaGame");
         }
+    }
+    
+    public string GetID()
+    {
+        return _id;
     }
     
     public string GetBirthdate()
@@ -172,6 +182,7 @@ public class HubManager : MonoBehaviour
 [Serializable]
 public class UserProfileResponse
 {
+    public string _id;
     public string email;
     public string username;
     public string birthdate;
