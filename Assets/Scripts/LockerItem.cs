@@ -17,6 +17,7 @@ public class LockerItem : MonoBehaviour
     void OnClickButton()
     {
         PlayerPrefs.SetString("playerCharacter", itemName);
+        PlayerPrefs.Save();
         FindObjectOfType<HubManager>().SetPlayerCharacter(null);
         FindObjectOfType<HubManager>().GetComponent<LockerManager>().SetPlayerInfo(itemName, description);
     }

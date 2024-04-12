@@ -12,6 +12,7 @@ public class HubManager : MonoBehaviour
     [SerializeField] private GameObject lobbyScreen;
     [SerializeField] private GameObject lockerScreen;
     [SerializeField] private GameObject shopScreen;
+    [SerializeField] private GameObject settingsScreen;
 
     [Header("PlayerInfo")]
     [SerializeField] private GameObject playerParent;
@@ -31,6 +32,7 @@ public class HubManager : MonoBehaviour
     private LevelManager _levelManager;
     private GameSelectionManager _gameSelectionManager;
     private GameDescriptionManager _gameDescriptionManager;
+    private SettingsManager _settingsManager;
     
     private string _id;
     private string _birthdate;
@@ -60,6 +62,7 @@ public class HubManager : MonoBehaviour
         _levelManager = GetComponent<LevelManager>();
         _gameSelectionManager = GetComponent<GameSelectionManager>();
         _gameDescriptionManager = GetComponent<GameDescriptionManager>();
+        _settingsManager = GetComponent<SettingsManager>();
         
         SetPlayerCharacter(null);
         SetUserProfile();
@@ -93,8 +96,11 @@ public class HubManager : MonoBehaviour
 
             _id = response._id;
             _birthdate = response.birthdate;
-            username.text = response.username;
             
+            _settingsManager.SetEmail(response.email);
+            _settingsManager.SetUsername(response.username);
+            
+            SetUsername(response.username);
             SetPlayerCoins(response.coins);
             SetPlayerLevelProgressBarAndTextDetails(response.score);
             _lockerManager.DisplayLockerItems(response.accessories);
@@ -116,6 +122,11 @@ public class HubManager : MonoBehaviour
     public int GetPlayerCoins()
     {
         return int.Parse(coinsText.text);
+    }
+    
+    public void SetUsername(string username)
+    {
+        this.username.text = username;
     }
 
     public void SetPlayerCoins(int coins)
@@ -176,6 +187,17 @@ public class HubManager : MonoBehaviour
         if (!shopScreen.activeInHierarchy) shopScreen.SetActive(true);
         if (lobbyScreen.activeInHierarchy) lobbyScreen.SetActive(false);
         if (lockerScreen.activeInHierarchy) lockerScreen.SetActive(false);
+    }
+
+    public void GoToSettings()
+    {
+        settingsScreen.SetActive(true);
+    }
+    
+    public void CloseSettings()
+    {
+        settingsScreen.SetActive(false);
+        _settingsManager.ResetErrorMessages();
     }
 }
 

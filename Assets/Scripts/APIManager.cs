@@ -32,7 +32,7 @@ public class APIManager : MonoBehaviour
 
             yield return www.SendWebRequest();
 
-            if (www.responseCode == 401) Logout();
+            if (requiredToken && www.responseCode == 401) Logout();
             else callback(www);
         }
     }

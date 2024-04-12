@@ -27,23 +27,24 @@ public class AuthenticationManager : MonoBehaviour
     private void Start()
     {
         _apiManager = GetComponent<APIManager>();
+        
         string savedToken = PlayerPrefs.GetString("token");
-        if (!string.IsNullOrEmpty(savedToken))
-        {
-            SceneManager.LoadScene(1);
-        }
+        if (!string.IsNullOrEmpty(savedToken)) SceneManager.LoadScene(1);
+        else loginEmailField.Select();
     }
 
     public void AlreadyHaveAnAccount()
     {
         loginScreen.gameObject.SetActive(true);
         registerScreen.gameObject.SetActive(false);
+        loginEmailField.Select();
     }
     
     public void DontHaveAnAccount()
     {
         registerScreen.gameObject.SetActive(true);
         loginScreen.gameObject.SetActive(false);
+        registerUsernameField.Select();
     }
 
     public void Login()
