@@ -122,7 +122,7 @@ public class GameSelectionManager : MonoBehaviour
 
     private int CalculateAge()
     {
-        DateTime birthdate = DateTime.ParseExact(_hubManager.GetBirthdate(), "dd/MM/yyyy", null);
+        DateTime birthdate = _hubManager.GetBirthdate();
         DateTime now = DateTime.Today;
         int age = now.Year - birthdate.Year;
         if (now.Month < birthdate.Month || (now.Month == birthdate.Month && now.Day < birthdate.Day)) age--;

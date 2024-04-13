@@ -35,7 +35,7 @@ public class HubManager : MonoBehaviour
     private SettingsManager _settingsManager;
     
     private string _id;
-    private string _birthdate;
+    private DateTime _birthdate;
 
     private string _selectedGame = "TriviaGame";
     
@@ -95,8 +95,8 @@ public class HubManager : MonoBehaviour
             UserProfileResponse response = JsonUtility.FromJson<UserProfileResponse>(www.downloadHandler.text);
 
             _id = response._id;
-            _birthdate = response.birthdate;
-            
+            _birthdate = DateTime.Parse(response.birthdate);
+
             _settingsManager.SetEmail(response.email);
             _settingsManager.SetUsername(response.username);
             
@@ -114,7 +114,7 @@ public class HubManager : MonoBehaviour
         return _id;
     }
     
-    public string GetBirthdate()
+    public DateTime GetBirthdate()
     {
         return _birthdate;
     }
@@ -158,7 +158,7 @@ public class HubManager : MonoBehaviour
         
         _animator = _player.AddComponent<Animator>();
         _animator.runtimeAnimatorController = playerController;
-        // _animator.SetBool("isJogging", true);
+        // _animator.SetBool("isYawning", true);
     }
 
     public void GoToLobby()
