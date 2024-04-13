@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
         gameOverDescription.text = _won ? "You completed the game!" : "You chose the wrong answer!";
     }
 
-    private string GetScore()
+    public string GetScore()
     {
         return playerParent.transform.position.z.ToString("0");
     }

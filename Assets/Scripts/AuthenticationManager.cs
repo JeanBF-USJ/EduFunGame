@@ -19,7 +19,7 @@ public class AuthenticationManager : MonoBehaviour
     [SerializeField] private TMP_InputField registerUsernameField;
     [SerializeField] private TMP_InputField registerEmailField;
     [SerializeField] private TMP_InputField registerPasswordField;
-    [SerializeField] private TMP_InputField registerBirthdateField;
+    [SerializeField] private DatePicker datePicker;
     [SerializeField] private TextMeshProUGUI registerErrorText;
     
     private APIManager _apiManager;
@@ -58,7 +58,7 @@ public class AuthenticationManager : MonoBehaviour
     {
         string apiEndpoint = "/auth/register";
         string jsonStr = "{\"username\":\"" + registerUsernameField.text + "\",\"email\":\"" + registerEmailField.text
-                         + "\",\"password\":\"" + registerPasswordField.text + "\",\"birthdate\":\"" + registerBirthdateField.text + "\"}";
+                         + "\",\"password\":\"" + registerPasswordField.text + "\",\"birthdate\":\"" + datePicker.GetDate() + "\"}";
         StartCoroutine(_apiManager.SendRequest(apiEndpoint, jsonStr, false, HandleResponse));
     }
     
