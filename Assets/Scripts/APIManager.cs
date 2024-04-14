@@ -1,18 +1,33 @@
 using System;
 using System.Collections;
+using System.IO;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
 public class APIManager : MonoBehaviour
 {
-    private string _baseUrl = "http://localhost:3000";
+    private string _protocol = "http://";
+    private string _port = ":3000";
+    private string _ip;
 
+    private void Awake()
+    {
+#if UNITY_EDITOR
+        PlayerSettings.insecureHttpOption = InsecureHttpOption.AlwaysAllowed;
+#endif
+        string filePath = Path.Combine(Application.streamingAssetsPath, "config.json");
+        string dataAsJson = File.ReadAllText(filePath);
+        ConfigData configData = JsonUtility.FromJson<ConfigData>(dataAsJson);
+        _ip = configData.IP;
+    }
+    
     public delegate void ResponseCallback(UnityWebRequest response);
     
     public IEnumerator SendRequest(string apiEndpoint, string jsonStr, bool requiredToken, ResponseCallback callback)
     {
-        using (UnityWebRequest www = UnityWebRequest.PostWwwForm(_baseUrl + apiEndpoint, "POST"))
+        using (UnityWebRequest www = UnityWebRequest.PostWwwForm(_protocol + _ip + _port + apiEndpoint, "POST"))
         {
             www.SetRequestHeader("Content-Type", "application/json");
             if (requiredToken)
@@ -43,4 +58,10 @@ public class APIManager : MonoBehaviour
         PlayerPrefs.Save();
         SceneManager.LoadScene(0);
     }
+}
+
+[Serializable]
+public class ConfigData
+{
+    public string IP;
 }
