@@ -8,10 +8,13 @@ public class SettingsManager : MonoBehaviour
 {
     [Header("Screens")]
     [SerializeField] private Image accountButton;
+    [SerializeField] private TextMeshProUGUI accountButtonText;
     [SerializeField] private GameObject accountScreen;
     [SerializeField] private Image creditsButton;
+    [SerializeField] private TextMeshProUGUI creditsButtonText;
     [SerializeField] private GameObject creditsScreen;
     [SerializeField] private Image legalButton;
+    [SerializeField] private TextMeshProUGUI legalButtonText;
     [SerializeField] private GameObject legalScreen;
     
     [Header("Settings")]
@@ -48,17 +51,20 @@ public class SettingsManager : MonoBehaviour
         {
             accountScreen.SetActive(true);
             accountButton.color = new Color(1f, 1f, 1f, 1f);
+            accountButtonText.color = new Color(0, 0, 0, 1f);
         }
         if (creditsScreen.activeInHierarchy)
         {
             creditsScreen.SetActive(false);
             creditsButton.color = new Color(1f, 1f, 1f, 0);
+            creditsButtonText.color = new Color(1f, 1f, 1f, 1f);
         }
 
         if (legalScreen.activeInHierarchy)
         {
             legalScreen.SetActive(false);
             legalButton.color = new Color(1f, 1f, 1f, 0);
+            legalButtonText.color = new Color(1f, 1f, 1f, 1f);
         }
     }
     
@@ -68,16 +74,19 @@ public class SettingsManager : MonoBehaviour
         {
             creditsScreen.SetActive(true);
             creditsButton.color = new Color(1f, 1f, 1f, 1f);
+            creditsButtonText.color = new Color(0, 0, 0, 1f);
         }
         if (accountScreen.activeInHierarchy)
         {
             accountScreen.SetActive(false);
             accountButton.color = new Color(1f, 1f, 1f, 0);
+            accountButtonText.color = new Color(1f, 1f, 1f, 1f);
         }
         if (legalScreen.activeInHierarchy)
         {
             legalScreen.SetActive(false);
             legalButton.color = new Color(1f, 1f, 1f, 0);
+            legalButtonText.color = new Color(1f, 1f, 1f, 1f);
         }
     }
     
@@ -87,16 +96,19 @@ public class SettingsManager : MonoBehaviour
         {
             legalScreen.SetActive(true);
             legalButton.color = new Color(1f, 1f, 1f, 1f);
+            legalButtonText.color = new Color(0, 0, 0, 1f);
         }
         if (accountScreen.activeInHierarchy)
         {
             accountScreen.SetActive(false);
             accountButton.color = new Color(1f, 1f, 1f, 0);
+            accountButtonText.color = new Color(1f, 1f, 1f, 1f);
         }
         if (creditsScreen.activeInHierarchy)
         {
             creditsScreen.SetActive(false);
             creditsButton.color = new Color(1f, 1f, 1f, 0);
+            creditsButtonText.color = new Color(1f, 1f, 1f, 1f);
         }
     }
 
