@@ -13884,7 +13884,7 @@ GameObject:
   - component: {fileID: 1684521428}
   - component: {fileID: 1684521429}
   m_Layer: 0
-  m_Name: hubBackground
+  m_Name: HubBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
