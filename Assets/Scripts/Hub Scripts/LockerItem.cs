@@ -16,9 +16,12 @@ public class LockerItem : MonoBehaviour
 
     void OnClickButton()
     {
-        PlayerPrefs.SetString("playerCharacter", itemName);
+        HubManager hubManager = FindObjectOfType<HubManager>();
+        
+        PlayerPrefs.SetString(hubManager.GetID(), itemName);
         PlayerPrefs.Save();
-        FindObjectOfType<HubManager>().SetPlayerCharacter(null);
-        FindObjectOfType<HubManager>().GetComponent<LockerManager>().SetPlayerInfo(itemName, description);
+        
+        hubManager.SetPlayerCharacter(null);
+        hubManager.GetComponent<LockerManager>().SetPlayerInfo(itemName, description);
     }
 }

@@ -64,7 +64,6 @@ public class HubManager : MonoBehaviour
         _gameDescriptionManager = GetComponent<GameDescriptionManager>();
         _settingsManager = GetComponent<SettingsManager>();
         
-        SetPlayerCharacter(null);
         SetUserProfile();
     }
 
@@ -95,12 +94,16 @@ public class HubManager : MonoBehaviour
             UserProfileResponse response = JsonUtility.FromJson<UserProfileResponse>(www.downloadHandler.text);
 
             _id = response._id;
+            PlayerPrefs.SetString("LoggedInUser", _id);
+            PlayerPrefs.Save();
+            
             _birthdate = DateTime.Parse(response.birthdate);
 
             _settingsManager.SetEmail(response.email);
             _settingsManager.SetUsername(response.username);
             
             SetUsername(response.username);
+            SetPlayerCharacter(null);
             SetPlayerCoins(response.coins);
             SetPlayerLevelProgressBarAndTextDetails(response.score);
             _lockerManager.DisplayLockerItems(response.accessories);
@@ -149,7 +152,7 @@ public class HubManager : MonoBehaviour
             _player = null;
         }
         
-        if (string.IsNullOrEmpty(playerCharacter)) playerCharacter = PlayerPrefs.GetString("playerCharacter");
+        if (string.IsNullOrEmpty(playerCharacter)) playerCharacter = PlayerPrefs.GetString(GetID());
         if (string.IsNullOrEmpty(playerCharacter)) playerCharacter = "Ninja";
         
         _player = Instantiate((UnityEngine.Object)Resources.Load("PlayerPrefabs/" + playerCharacter), Vector3.zero, Quaternion.identity, playerParent.transform) as GameObject;

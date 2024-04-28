@@ -17,7 +17,10 @@ public class GameManager : MonoBehaviour
     {
         _apiManager = GetComponent<APIManager>();
         
-        string playerCharacter = PlayerPrefs.GetString("playerCharacter");
+        string playerCharacter = "";
+        string loggedInUser = PlayerPrefs.GetString("LoggedInUser");
+        
+        if (!string.IsNullOrEmpty(loggedInUser)) playerCharacter = PlayerPrefs.GetString(loggedInUser);
         if (string.IsNullOrEmpty(playerCharacter)) playerCharacter = "Ninja";
         
         Vector3 spawnPosition = new Vector3(0f, 1f, 0f);
