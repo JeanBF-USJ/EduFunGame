@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public class APIManager : MonoBehaviour
 {
     private string _protocol = "http://";
-    private string _port = ":3000";
+    private string _port = ":1337";
     private string _ip;
 
     private void Awake()
@@ -27,7 +27,7 @@ public class APIManager : MonoBehaviour
     
     public IEnumerator SendRequest(string apiEndpoint, string jsonStr, bool requiredToken, ResponseCallback callback)
     {
-        using (UnityWebRequest www = UnityWebRequest.PostWwwForm(_protocol + _ip + _port + apiEndpoint, "POST"))
+        using (UnityWebRequest www = UnityWebRequest.PostWwwForm(_protocol + _ip + _port + "/api" + apiEndpoint, "POST"))
         {
             www.SetRequestHeader("Content-Type", "application/json");
             if (requiredToken)
@@ -38,7 +38,8 @@ public class APIManager : MonoBehaviour
                     Logout();
                     yield break;
                 }
-                else www.SetRequestHeader("Authorization", savedToken);
+                
+                www.SetRequestHeader("Authorization", savedToken);
             }
 
             if (jsonStr == null) jsonStr = "{}";

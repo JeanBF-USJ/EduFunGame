@@ -826,5 +826,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6e6cace199b1496c96a55a76a54bb25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinPrefab: {fileID: 5098291643911425281, guid: be28911300fd6400f8440d5d037424a3, type: 3}
+  coinPrefab: {fileID: 6397501628696130057, guid: fe03c5240bb3b4853946d413980ba660, type: 3}
   numberOfLanes: 3

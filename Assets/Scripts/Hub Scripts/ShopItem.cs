@@ -26,6 +26,6 @@ public class ShopItem : MonoBehaviour
         shopManager.SetPlayerInfo(this);
         
         if (owned.activeSelf) shopManager.HideBuyButton();
-        else shopManager.EnableBuyButton(hubManager.GetPlayerCoins() > int.Parse(price.text));
+        else shopManager.EnableBuyButton(hubManager.GetPlayerCoins() >= int.Parse(price.text));
     }
 }
