@@ -31,6 +31,7 @@ public class GameDescriptionManager : MonoBehaviour
     [SerializeField] private GameObject leaderboardItemPrefab;
     [SerializeField] private Transform gameLeaderboardContainer;
     [SerializeField] private GameObject gameLeaderboardScreen;
+    [SerializeField] private GameObject emptyLeaderboardText;
     
     [Header("")]
     [SerializeField] private GameObject thankYou;
@@ -218,17 +219,23 @@ public class GameDescriptionManager : MonoBehaviour
             EmptyLeaderboardItems();
             
             LeaderboardResponse response = JsonUtility.FromJson<LeaderboardResponse>(www.downloadHandler.text);
-            for (int i = 0; i < response.leaderboard.Length; i++)
+
+            if (response.leaderboard.Length == 0) emptyLeaderboardText.SetActive(true);
+            else
             {
-                LeaderBoardRow leaderBoardRow = response.leaderboard[i];
+                emptyLeaderboardText.SetActive(false);
+                for (int i = 0; i < response.leaderboard.Length; i++)
+                {
+                    LeaderBoardRow leaderBoardRow = response.leaderboard[i];
                 
-                GameObject newItem = Instantiate(leaderboardItemPrefab, gameLeaderboardContainer);
-                LeaderBoardItem leaderBoardItem = newItem.GetComponent<LeaderBoardItem>();
+                    GameObject newItem = Instantiate(leaderboardItemPrefab, gameLeaderboardContainer);
+                    LeaderBoardItem leaderBoardItem = newItem.GetComponent<LeaderBoardItem>();
                 
-                leaderBoardItem.ranking.text = (leaderBoardRow.ranking == 0 ? i+1 : leaderBoardRow.ranking).ToString();
-                leaderBoardItem.username.text = leaderBoardRow.username;
-                leaderBoardItem.score.text = leaderBoardRow.highest_score.ToString();
-                leaderBoardItem.SetCurrentUser(leaderBoardRow.user_id == _hubManager.GetID());
+                    leaderBoardItem.ranking.text = (leaderBoardRow.ranking == 0 ? i+1 : leaderBoardRow.ranking).ToString();
+                    leaderBoardItem.username.text = leaderBoardRow.username;
+                    leaderBoardItem.score.text = leaderBoardRow.highest_score.ToString();
+                    leaderBoardItem.SetCurrentUser(leaderBoardRow.user_id == _hubManager.GetID());
+                }
             }
         }
     }
