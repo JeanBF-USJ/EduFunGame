@@ -32,7 +32,7 @@ public class APIManager : MonoBehaviour
     {
         using (UnityWebRequest www = UnityWebRequest.PostWwwForm(_protocol + _ip + _port + _baseUrl + apiEndpoint, "POST"))
         {
-            www.timeout = 10;
+            www.timeout = 15;
             if (SceneManager.GetActiveScene().buildIndex == 0 && serverOfflineText.activeSelf) serverOfflineText.SetActive(false);
             
             www.SetRequestHeader("Content-Type", "application/json");
