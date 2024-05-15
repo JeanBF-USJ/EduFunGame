@@ -11,6 +11,7 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI itemName;
     [SerializeField] private TextMeshProUGUI itemDescription;
     [SerializeField] private Button buyButton;
+    [SerializeField] private GameObject failedToBuyText;
 
     private APIManager _apiManager;
     private ShopItem _previewedShopItem;
@@ -75,6 +76,7 @@ public class ShopManager : MonoBehaviour
         string apiEndpoint = "/accessories/buy";
         string jsonStr = "{\"accessory_id\":\"" + _previewedShopItem.id + "\"}";
         StartCoroutine(_apiManager.SendRequest(apiEndpoint, jsonStr, true, HandleBuyResponse));
+        if (failedToBuyText.activeSelf) failedToBuyText.SetActive(false);
     }
 
     private void HandleBuyResponse(UnityWebRequest www)
@@ -84,7 +86,7 @@ public class ShopManager : MonoBehaviour
             FindObjectOfType<HubManager>().SetUserProfile();
             _previewedShopItem.owned.SetActive(true);
             HideBuyButton();
-        }
+        } else failedToBuyText.SetActive(true);
     }
 }
 

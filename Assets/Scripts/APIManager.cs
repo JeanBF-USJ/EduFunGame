@@ -54,7 +54,7 @@ public class APIManager : MonoBehaviour
 
             yield return www.SendWebRequest();
             
-            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+            if (www.result == UnityWebRequest.Result.ConnectionError)
             {
                 if (SceneManager.GetActiveScene().buildIndex != 0) Logout();
                 if (SceneManager.GetActiveScene().buildIndex == 0 && !serverOfflineText.activeSelf) serverOfflineText.SetActive(true);

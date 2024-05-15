@@ -46,6 +46,10 @@ public class HubManager : MonoBehaviour
         {"Eve", -0.15f},
         {"Kachujin", 0.165f},
         {"Vanguard", 0.12f},
+        {"Creeplown", 0.18f},
+        {"Destroyer", 0.015f},
+        {"Granny", -0.07f},
+        {"Lola", 0.17f}
     };
     
     private readonly Dictionary<string, int> _gameScenes = new Dictionary<string, int>()
